@@ -11,6 +11,6 @@ import java.io.IOException;
 public class Master {
     public static void main(String args[]) throws IOException, TikaException, SAXException {
         ReadXml.getXmlURL();
-        LocalCrawl.GetFiles();
+        Crawl.GetFiles();
     }
 }
