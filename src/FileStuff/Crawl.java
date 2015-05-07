@@ -33,9 +33,20 @@ public class Crawl {
             if(link.endsWith("pdf") || link.endsWith("txt") || link.endsWith("docx")
                     || link.endsWith("odt")){
 
+                try {
                 URL archivoOnline = new URL(link);
                 InputStream x = archivoOnline.openStream();
                 TikaReader.ParsedOnlineText(x);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    continue;
+                } catch (SAXException e) {
+                    e.printStackTrace();
+                    continue;
+                } catch (TikaException e) {
+                    e.printStackTrace();
+                    continue;
+                }
             }
 
             Document doc = Jsoup.connect(link)
@@ -56,10 +67,9 @@ public class Crawl {
                     if (absUrl == null || absUrl.length() == 0) {
                         continue;
                     }
-//                  System.out.println(absUrl);
                     else{
                         if(!ParsedLinks.contains(absUrl)){
-                            PathQueue.add(absUrl);
+                            PathQueue.add(absUrl);//DE AQUI PUEDO SACAR UNO A UNO LOS LINKS PARA LA FUNCION QUE WILSON DIJO
                         }
                     }
                 }
