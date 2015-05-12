@@ -8,35 +8,57 @@ import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
 
 import java.io.*;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Queue;
 
 import static FileStuff.ReadXml.PathXml;
+import static FileStuff.ReadXml.PesoXml;
 
 /**
  * Created by jackthebones on 25/04/15.
+ * Clase encargada de hacer Crawling en los directorios
+ * e identificar los archivos aptos a ser parseados.
  */
 public class Crawl {
 
+    //Queue que contiene los links a ser parseados, es la cola que alimenta al crawl.
     public static Queue OnlinePathQueue = new LinkedList<>();
+    //Queue que contiene los links que ya han sido parseados, para de esta manera no parsearlos nuevamente.
     public static Queue<Object> ParsedLinks = new LinkedList<>();
 
-    public static void GetFilesOnline(Queue PathQueue) throws IOException, TikaException, SAXException {
+    /**
+     * Analiza un url dado, para saber si
+     * dentro de este url, se encuentran
+     * archivos que cumplen la condicion
+     * de que se les pueda extraer texto,
+     * y devulve el path o uri de cada uno
+     * para ser insertadas en el arbol de
+     * direcciones, ademas recibe el peso,
+     * de dicho path, para que en caso de tener
+     * varios archivos, estos heredan el peso
+     * del uri que los contiene.
+     * @param PathQueue
+     * @param Peso
+     * @throws IOException
+     * @throws TikaException
+     * @throws SAXException
+     */
+    public static void GetFilesOnline(Queue PathQueue, int Peso) throws IOException, TikaException, SAXException {
         while (!PathQueue.isEmpty()){
             String link  = (String) PathQueue.remove();
             ParsedLinks.add(link);
-            System.out.println("------"+link);
 
             if(link.endsWith("pdf") || link.endsWith("txt") || link.endsWith("docx")
                     || link.endsWith("odt")){
 
-                try {
-                URL archivoOnline = new URL(link);
-                InputStream x = archivoOnline.openStream();
-                TikaReader.ParsedOnlineText(x);
+                System.out.println(link + " Peso :: " + Peso);
+
+                /* try {
+                    URL archivoOnline = new URL(link);
+                    InputStream x = archivoOnline.openStream();
+                    TikaReader.ParsedOnlineText(x); // Aqui hay que asignarle este Array a la variable deseada
                 } catch (IOException e) {
                     e.printStackTrace();
                     continue;
@@ -46,7 +68,7 @@ public class Crawl {
                 } catch (TikaException e) {
                     e.printStackTrace();
                     continue;
-                }
+                } */
             }
 
             Document doc = Jsoup.connect(link)
@@ -54,13 +76,10 @@ public class Crawl {
                     .referrer("http://www.google.com")
                     .ignoreHttpErrors(true)
                     .ignoreContentType(true)
-                    .timeout(5000)
                     .get();
 
 
             Elements links = doc.select("a[href]");
-            //Elements txts = doc.select("a[href\\$=.zip]");
-            //System.out.println()
             for (Element link1 : links){
                 if(link1.attr("abs:href").contains(link)){
                     String absUrl = link1.attr("abs:href");
@@ -77,12 +96,20 @@ public class Crawl {
         }
     }
 
-    public static void GetFilesLocally() throws IOException {
+    /**
+     * Funcion que hace el crawl localmente que encuentra los
+     * tipos de archivo a los que se le puede extraer texto,
+     * y devuelve las direcciones o paths de los archivos,
+     * para ser insertados en el arbol que almacena las direcciones.
+     * @param Peso
+     * @throws IOException
+     */
+    public static void GetFilesLocally(int Peso) throws IOException {
         Files.walk(Paths.get(PathXml)).forEach(filePath -> { //Crawling process (Using Java 8)
             if (Files.isRegularFile(filePath)) {
                 if (filePath.toString().endsWith(".pdf") || filePath.toString().endsWith(".docx") ||
                         filePath.toString().endsWith(".txt")){
-                    try {
+                    /* try {
                         TikaReader.ParsedText(filePath.toString());
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -90,20 +117,28 @@ public class Crawl {
                         e.printStackTrace();
                     } catch (TikaException e) {
                         e.printStackTrace();
-                    }
-                    System.out.println(filePath);
+                    }*/
+                    System.out.println(filePath +" Peso :: "+ Peso);
                 }
             }
         });
     }
 
+    /**
+     * Funcion que detecta el tipo de uri dada por el xml,
+     * y que a su vez, decide cual metodo utilizar para realizar
+     * el proceso de extraccion de texto. (Local u Online)
+     * @throws IOException
+     * @throws TikaException
+     * @throws SAXException
+     */
     public static void GetFiles() throws IOException, TikaException, SAXException {
         if (PathXml.startsWith("/")){
-            GetFilesLocally();
+            GetFilesLocally(PesoXml);
         }
         else{
             OnlinePathQueue.add(PathXml);
-            GetFilesOnline(OnlinePathQueue);
+            GetFilesOnline(OnlinePathQueue, PesoXml);
         }
     }
 }
