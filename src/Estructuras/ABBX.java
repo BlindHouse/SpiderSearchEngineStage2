@@ -196,7 +196,7 @@ public class ABBX {
        Nodo nuevo1 = new Nodo("Casa", 10);
        Nodo nuevo2 = new Nodo("Casa", 26);
        Nodo nuevo3 = new Nodo("Casa", 18);
-       Nodo nuevo4 = new Nodo("Pato",5);
+       Nodo nuevo4 = new Nodo("Pato",51);
        Nodo nuevo5 = new Nodo("Pato",28);
        Nodo nuevo6 = new Nodo("Pato",111);
        
@@ -213,7 +213,7 @@ public class ABBX {
        abl.prueba();
        abl.prueba();
        abl.prueba();
-       abl.prueba();
+       //abl.prueba();
        //abl.iEsta(nuevo1);
        //abl.Borrar(nuevo5);
       // abl.Borrar(nuevo6);
