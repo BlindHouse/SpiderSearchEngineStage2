@@ -26,16 +26,16 @@ public class TikaReader {
      * @throws SAXException
      * @throws TikaException
      */
-    public static String [] ParsedText(String file) throws IOException, SAXException, TikaException {
+    public static String ParsedText(String file) throws IOException, SAXException, TikaException {
         InputStream stream = new FileInputStream(file); //Crea el streamread del archivo para su lectura
         AutoDetectParser parser = new AutoDetectParser();//Autodetecta el formato del archivo a parsear
         BodyContentHandler handler = new BodyContentHandler();
         Metadata metadata = new Metadata();
         try {
             parser.parse(stream, handler, metadata);
-            String [] Palabras = handler.toString().replaceAll(",", "")
+            String Palabras = handler.toString().replaceAll(",", "")
                     .replaceAll("-", "").replaceAll("","").replaceAll("\"","")
-                    .replaceAll("\\.","").replaceAll("™","").split("\\s+");;
+                    .replaceAll("\\.","").replaceAll("™","");
             System.out.println(Palabras + " This is the words Array");//handler = texto parseado. Se realiza .toString() para imprimir.
             return Palabras;//Esto de hecho es lo que retorna el String de texto Parseado.
         } finally {
@@ -56,15 +56,15 @@ public class TikaReader {
      * @throws SAXException
      * @throws TikaException
      */
-    public static String[] ParsedOnlineText(InputStream file) throws IOException, SAXException, TikaException {
+    public static String ParsedOnlineText(InputStream file) throws IOException, SAXException, TikaException {
         AutoDetectParser parser = new AutoDetectParser();//Autodetecta el formato del archivo a parsear
         BodyContentHandler handler = new BodyContentHandler(-1);
         Metadata metadata = new Metadata();
         try {
             parser.parse(file, handler, metadata);
-            String [] Palabras = handler.toString().replaceAll(",", "")
+            String Palabras = handler.toString().replaceAll(",", "")
                     .replaceAll("-", "").replaceAll("","").replaceAll("\"","")
-                    .replaceAll("\\.","").replaceAll("™","").split("\\s+");
+                    .replaceAll("\\.","").replaceAll("™","");
             System.out.println(Palabras + " This is the words array");//handler = texto parseado. Se realiza .toString() para imprimir.
             return Palabras;//Esto de hecho es lo que retorna el String de texto Parseado.
         }finally {

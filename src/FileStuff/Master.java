@@ -1,7 +1,9 @@
 package FileStuff;
 
+import Estructuras.ABBX;
 import org.apache.tika.exception.TikaException;
 import org.xml.sax.SAXException;
+import static FileStuff.Crawl.LinkStorage;
 
 import java.io.IOException;
 
@@ -11,6 +13,6 @@ import java.io.IOException;
 public class Master {
     public static void main(String args[]) throws IOException, TikaException, SAXException {
         ReadXml.getXmlURL();
-        //Crawl.GetFiles();
+        ABBX.ReadParseLoop(LinkStorage);
     }
 }

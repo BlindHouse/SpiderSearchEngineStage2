@@ -1,11 +1,13 @@
 package FileStuff;
 
+import Estructuras2.Nodo;
 import org.apache.tika.exception.TikaException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.xml.sax.SAXException;
+import Estructuras.ABBX;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -27,6 +29,8 @@ public class Crawl {
     public static Queue OnlinePathQueue = new LinkedList<>();
     //Queue que contiene los links que ya han sido parseados, para de esta manera no parsearlos nuevamente.
     public static Queue<Object> ParsedLinks = new LinkedList<>();
+    //Arbol contenedor de los links y el peso
+    public static ABBX LinkStorage= new ABBX();
 
     /**
      * Analiza un url dado, para saber si
@@ -53,22 +57,7 @@ public class Crawl {
             if(link.endsWith("pdf") || link.endsWith("txt") || link.endsWith("docx")
                     || link.endsWith("odt")){
 
-                System.out.println(link + " Peso :: " + Peso);
-
-                /* try {
-                    URL archivoOnline = new URL(link);
-                    InputStream x = archivoOnline.openStream();
-                    TikaReader.ParsedOnlineText(x); // Aqui hay que asignarle este Array a la variable deseada
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    continue;
-                } catch (SAXException e) {
-                    e.printStackTrace();
-                    continue;
-                } catch (TikaException e) {
-                    e.printStackTrace();
-                    continue;
-                } */
+                LinkStorage.insertar(new Nodo(link, Peso));
             }
 
             Document doc = Jsoup.connect(link)
@@ -109,16 +98,7 @@ public class Crawl {
             if (Files.isRegularFile(filePath)) {
                 if (filePath.toString().endsWith(".pdf") || filePath.toString().endsWith(".docx") ||
                         filePath.toString().endsWith(".txt")){
-                    /* try {
-                        TikaReader.ParsedText(filePath.toString());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (SAXException e) {
-                        e.printStackTrace();
-                    } catch (TikaException e) {
-                        e.printStackTrace();
-                    }*/
-                    System.out.println(filePath +" Peso :: "+ Peso);
+                    LinkStorage.insertar(new Nodo(filePath, Peso));
                 }
             }
         });
