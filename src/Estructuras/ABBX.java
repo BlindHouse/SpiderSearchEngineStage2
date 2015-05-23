@@ -6,7 +6,6 @@
 package Estructuras;
 
 
-import Estructuras2.Nodo;
 import FileStuff.TikaReader;
 import FileStuff.WordCounter;
 import org.apache.tika.exception.TikaException;

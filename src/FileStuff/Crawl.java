@@ -1,6 +1,6 @@
 package FileStuff;
 
-import Estructuras2.Nodo;
+import Estructuras.Nodo;
 import org.apache.tika.exception.TikaException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
