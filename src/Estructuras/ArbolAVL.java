@@ -36,7 +36,7 @@ public class ArbolAVL {
         else if( x.compareTo( t.dato ) <= 0 ) {
             t.izquierdo = insertar(x,Palabra, t.izquierdo );
             if( height( t.izquierdo ) - height( t.derecho ) == 2 )
-                if( x.compareTo( t.izquierdo.dato ) < 0 )
+                if( x.compareTo( t.izquierdo.dato ) <= 0 )
                     t = rotateWithLeftChild( t ); /* Caso 1 */
                 else
                     t = doubleWithLeftChild( t ); /* Caso 2 */
@@ -232,15 +232,20 @@ public class ArbolAVL {
             }
         }
     }
-     
-     private void buscar (AVLNodo reco, String g)
+
+    public static ABB FinalBinaryTree = new ABB();
+
+     private void buscar (AVLNodo reco, String uri, String g)
       {
            if (reco != null){
                if (reco.Palabra.equalsIgnoreCase(g)){
-                   System.out.print(reco.getDato()+" <-------> " +reco.getPalabra()+ "          ");
+                   int Cantidad = (Integer) reco.getDato();
+                   System.out.print(Cantidad+" <-------> " +reco.getPalabra()+ "          ");
+                   ABBNodo FinalNodo = new ABBNodo(uri, g, Cantidad);
+                   FinalBinaryTree.insertar(FinalNodo);
                }
-                buscar (reco.izquierdo, g);
-                buscar (reco.derecho, g);
+                buscar (reco.izquierdo, uri, g);
+                buscar (reco.derecho, uri, g);
           }
            
       }
@@ -249,13 +254,10 @@ public class ArbolAVL {
      *esta nos retorna un string palabra y un int con la cantidad de veces q aparece
      * @param palabra
      */
-    public void Buscar (String palabra)
-      {
-          buscar (raiz, palabra);
+    public void Buscar (String uri, String palabra) {
+          buscar (raiz, uri, palabra);
           System.out.println();
       }
-     
-      
       
     
 }

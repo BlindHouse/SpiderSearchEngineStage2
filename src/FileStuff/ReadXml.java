@@ -83,9 +83,7 @@ public class ReadXml extends DefaultHandler {
                         PesoTag = "close";
                         try {
                             Crawl.GetFiles();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (TikaException e) {
+                        } catch (IOException | TikaException e) {
                             e.printStackTrace();
                         }
                     }

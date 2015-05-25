@@ -50,6 +50,7 @@ public class Crawl {
      * @throws SAXException
      */
     public static void GetFilesOnline(Queue PathQueue, int Peso) throws IOException, TikaException, SAXException {
+        System.out.println("-------------------------------INSERTANDO NODOS EN HEAP ONLINE");
         while (!PathQueue.isEmpty()){
             String link  = (String) PathQueue.remove();
             ParsedLinks.add(link);
@@ -58,6 +59,7 @@ public class Crawl {
                     || link.endsWith("odt")){
 
                 LinkStorage.insertar(new Nodo(link, Peso));
+                System.out.println("Insertado Nodo en abbx online");
             }
 
             Document doc = Jsoup.connect(link)
@@ -94,11 +96,13 @@ public class Crawl {
      * @throws IOException
      */
     public static void GetFilesLocally(int Peso) throws IOException {
+        System.out.println("-------------------------------INSERTANDO NODOS EN HEAP LOCALMENTE");
         Files.walk(Paths.get(PathXml)).forEach(filePath -> { //Crawling process (Using Java 8)
             if (Files.isRegularFile(filePath)) {
                 if (filePath.toString().endsWith(".pdf") || filePath.toString().endsWith(".docx") ||
                         filePath.toString().endsWith(".txt")){
                     LinkStorage.insertar(new Nodo(filePath, Peso));
+                    System.out.println("Insertado Nodo en abbx local");
                 }
             }
         });
@@ -113,6 +117,7 @@ public class Crawl {
      * @throws SAXException
      */
     public static void GetFiles() throws IOException, TikaException, SAXException {
+        System.out.println("LLAMADA \t LLamada");
         if (PathXml.startsWith("/")){
             GetFilesLocally(PesoXml);
         }

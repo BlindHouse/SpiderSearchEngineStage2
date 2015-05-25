@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import static FileStuff.WordCounter.*;
+
 
 /**
  *
@@ -168,30 +170,34 @@ public class ABBX {
     }
       
     private void Borrar_Aux(Nodo Dato){
-         if(iEsta(Dato)){
-             if(Inicio == Dato) {
-                 Inicio = null;
-                 System.out.println("Raiz borrada");
-             }
-             else if(Dato.Left==null && Dato.Right== null) {
-                 if(Dato.getPeso()>=Dato.Father.getPeso()){
-                     Nodo padre=Dato.getFather();
-                     padre.setRightSon(null);
-                 }
-                 else if(Dato.getPeso()<Dato.Father.getPeso()){
-                     Nodo padre=Dato.getFather();
-                     padre.setLeftSon(null);
-                 }
-             }
-             else if(Dato.Left!= null){
-                 Nodo padre = Dato.getFather();
-                 padre.setRightSon(Dato.getLeftSon());
-                 Dato.Left.setFather(padre);
-             }else if(Dato.Right==null && Dato==Inicio){
-                 Dato.Left.setFather(null);
-                 setInicio(Dato.Left);
-             }
-         }
+        if(iEsta(Dato)){
+            if(Inicio == Dato && Dato.Left == null){
+                Inicio = null;
+            }
+            else if(Inicio == Dato && Dato.Left != null) {
+                setInicio(Dato.Left);
+                Dato.getLeftSon().setFather(null);
+                System.out.println("Raiz borrada");
+            }
+            else if(Dato.Left==null && Dato.Right== null) {
+                if(Dato.getPeso()>=Dato.Father.getPeso()){
+                    Nodo padre=Dato.getFather();
+                    padre.setRightSon(null);
+                }
+                else if(Dato.getPeso()<Dato.Father.getPeso()){
+                    Nodo padre=Dato.getFather();
+                    padre.setLeftSon(null);
+                }
+            }
+            else if(Dato.Left!= null){
+                Nodo padre = Dato.getFather();
+                padre.setRightSon(Dato.getLeftSon());
+                Dato.Left.setFather(padre);
+            }else if(Dato.Right==null && Dato==Inicio){
+                Dato.Left.setFather(null);
+                setInicio(Dato.Left);
+            }
+        }
          else{
              System.out.println("Eseobjeto no se encuentra en este arbol");
          }
@@ -225,18 +231,44 @@ public class ABBX {
         return ElementoARetornar;
     }
 
+    private Nodo RetornaNodoAux (Nodo reco) {
+        Nodo a = reco;
+        if (reco.Right != null && reco.Left != null){
+            RetornaNodoAux(reco.Right);
+            RetornaNodoAux(reco.Left);
+        }
+        else if (reco.Right == null && reco.Left == null){
+            reco = null;
+        }
+        return a;
+    }
+
+    public Nodo RetornaNodo(){
+        return RetornaNodoAux(Inicio);
+    }
+
+
+    public static RedAndBlackTree FinalTree = new RedAndBlackTree();
+
     public static void ReadParseLoop(ABBX arbol){
+        System.out.println("----------------------READ PARSE INSERTAR NODO de arbol mas uri al BN");
         while (arbol.Inicio != null){
             Nodo TempNodo = arbol.PopNodo();
             String uri = TempNodo.getUrl().toString();
-            int peso = TempNodo.getPeso();
             if (uri.startsWith("http")){
                 try {
                     URL archivoOnline = new URL(uri);
                     InputStream x = archivoOnline.openStream();
-                    //Aqui hay que modificar WordProcess para que por cada iteracion meta la palabra
-                    //Mas el numero de veces... talvez asi WordProcess(String, Arbol de palabras a meter)
-                    WordCounter.WordProcess(TikaReader.ParsedOnlineText(x));
+
+
+                    ArbolAVL AvlPalabras = WordProcess(TikaReader.ParsedOnlineText(x));
+                    NodoRB NodoFinal = new NodoRB(uri, AvlPalabras);
+                    System.out.println("SE INSERTO : " + uri + "ARBOL AVL :  " + NodoFinal.getDato().getDato());
+                    FinalTree.insert(NodoFinal);
+                    //System.out.println("PREORDEN ACTUAL BN");
+                    //FinalTree.verPreOrder();
+
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     continue;
@@ -248,19 +280,60 @@ public class ABBX {
                     continue;
                 }
             }
-            else{
+            else if(uri.startsWith("/")){
                 try {
-                    WordCounter.WordProcess(TikaReader.ParsedText(uri));
-                    } catch (IOException e) {
+
+
+                    ArbolAVL AvlPalabras = WordProcess(TikaReader.ParsedText(uri));
+                    NodoRB NodoFinal = new NodoRB(uri, AvlPalabras);
+                    System.out.println("SE INSERTO : " + uri + "ARBOL AVL :  " + NodoFinal.getDato().getDato());
+                    FinalTree.insert(NodoFinal);
+                    //System.out.println("PREORDEN ACTUAL BN");
+                    //FinalTree.verPreOrder();
+
+                    }
+                    catch (IOException e) {
                         e.printStackTrace();
-                    } catch (SAXException e) {
+                    }
+                    catch (SAXException e) {
                         e.printStackTrace();
-                    } catch (TikaException e) {
+                    }
+                    catch (TikaException e) {
                         e.printStackTrace();
                     }
             }
         }
     }
+
+    public static void main(String [] args){
+        ABBX ar = new ABBX();
+        ar.insertar(new Nodo("uri 1", 23));
+        ar.insertar(new Nodo("uri 7", 23));
+        ar.insertar(new Nodo("uri 2", 23));
+        ar.insertar(new Nodo("uri 6", 23));
+        ar.insertar(new Nodo("uri 3", 33));
+        ar.insertar(new Nodo("uri 5", 33));
+        ar.insertar(new Nodo("uri 4", 33));
+
+        ar.imprimirEntre();
+        System.out.println();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+        ar.PopNodo();
+        ar.imprimirEntre();
+
+    }
+
 }
     
 

@@ -5,12 +5,14 @@ package FileStuff;
  */
 
 
+import Estructuras.ArbolAVL;
+
 import java.util.ArrayList;
 
 
 public class WordCounter {
 
-    public static void WordProcess(String PlainText) {
+    public static ArbolAVL WordProcess(String PlainText) {
 
         // Text in
         String inText = PlainText;
@@ -47,14 +49,15 @@ public class WordCounter {
                 wordEncounter.add(word);
                 numberEncounter.add(new Integer(1));
             }
-
         }
 
+        ArbolAVL arbol = new ArbolAVL();
         // Text out (the list of words)
         for (int i = 0; i < wordEncounter.size(); i++) { //AQUI SACO LAS VARIABLES PALABRA MAS CANTIDAD
-            System.out.println(wordEncounter.get(i) + "\t"
-                    + numberEncounter.get(i));
+            int num = numberEncounter.get(i);
+            String str = wordEncounter.get(i);
+            arbol.insert(num, str);
         }
-
+        return arbol;
     }
 }

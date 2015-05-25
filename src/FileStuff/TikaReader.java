@@ -36,7 +36,6 @@ public class TikaReader {
             String Palabras = handler.toString().replaceAll(",", "")
                     .replaceAll("-", "").replaceAll("","").replaceAll("\"","")
                     .replaceAll("\\.","").replaceAll("™","");
-            System.out.println(Palabras + " This is the words Array");//handler = texto parseado. Se realiza .toString() para imprimir.
             return Palabras;//Esto de hecho es lo que retorna el String de texto Parseado.
         } finally {
             stream.close();
@@ -65,7 +64,6 @@ public class TikaReader {
             String Palabras = handler.toString().replaceAll(",", "")
                     .replaceAll("-", "").replaceAll("","").replaceAll("\"","")
                     .replaceAll("\\.","").replaceAll("™","");
-            System.out.println(Palabras + " This is the words array");//handler = texto parseado. Se realiza .toString() para imprimir.
             return Palabras;//Esto de hecho es lo que retorna el String de texto Parseado.
         }finally {
             file.close();//De aqui es posible que salga el error IO que hace que se caiga el programa con
