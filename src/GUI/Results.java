@@ -32,9 +32,6 @@ public class Results {
     public static String linkedlinks = "No results";
     public static JEditorPane myEditorPane;
 
-    public void deletePanel(){
-        myEditorPane.setText( "" );
-    }
 
     public void init() {
         myEditorPane = new JEditorPane("text/html","");
@@ -44,11 +41,24 @@ public class Results {
         myEditorPane.addHyperlinkListener((HyperlinkEvent e) -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 if (Desktop.isDesktopSupported()) {
-                    try {
-                        Desktop.getDesktop().browse(e.getURL().toURI());
-                    } catch (IOException | URISyntaxException ex) {
-                        ex.printStackTrace();
-                        Logger.getLogger(Results.class.getName()).log(Level.SEVERE, null, ex);
+
+                    if(e.getURL().toString().startsWith("file")){
+                        System.out.println("LOCAL");
+                        try {
+                            Desktop.getDesktop().open(new File(e.getURL().getFile()).getParentFile());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    else{
+                        System.out.println("ONLINE");
+                        try {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        } catch (URISyntaxException e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 }
             }

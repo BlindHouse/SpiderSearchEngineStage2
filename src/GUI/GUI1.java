@@ -152,7 +152,6 @@ public class GUI1 extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
 
-        System.out.println("JA");
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
         ReadXml.getXmlURL();

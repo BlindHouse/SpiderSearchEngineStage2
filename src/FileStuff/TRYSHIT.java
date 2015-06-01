@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public class TRYSHIT {
     public static void main(String [] args) throws IOException {
-        File htmlFile = new File("\"/home/jackthebones/Documents/PARSE PATH/\"");
-        Desktop.getDesktop().browse(htmlFile.toURI());
+        File htmlFile = new File("/home/jackthebones/Documents/PARSE PATH/Folder 1");
+        Desktop.getDesktop().open(htmlFile.getParentFile());
     }
 }

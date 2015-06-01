@@ -78,7 +78,7 @@ public class ABB {
               }
               else{
                   linkedlinks = linkedlinks + "La Palabra "+reco.getPalabra()+" Sale "+reco.getPeso() +
-                          " veces,Y se ubica en " + "<a href=\"" + uri + "\">" + uri + "</a>" + "<br><br>";
+                          " veces,Y se ubica en " + "<a href=\"file://" + uri + "\">" + uri + "</a>" + "<br><br>";
               }
           }
       }
